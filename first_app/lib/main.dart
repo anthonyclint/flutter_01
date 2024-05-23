@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool opacity = true;
+ // variável que poderá ser alterada ao longo da execução
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,16 +33,40 @@ class MyApp extends StatelessWidget {
           ),
           backgroundColor: Colors.blue,
         ),
-        body: ListView(
-          children: [
-            Task('Aprender Flutter', 'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large'),
-            Task('Meditação', 'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg'),
-            Task('Jogar', 'https://i.ibb.co/tB29PZB/kako-epifania-2022-2-c-pia.jpg'),
-            Task('Ler', 'https://thebogotapost.com/wp-content/uploads/2017/06/636052464065850579-137719760_flyer-image-1.jpg'),
-            Task('Corrida', 'https://www.corridaperfeita.com/wp-content/uploads/2023/03/blogpost-2.jpg'),
-          ],
+        body: AnimatedOpacity(
+          opacity: opacity ? 1 : 0,
+          duration: Duration(milliseconds: 800),
+          child: ListView(
+            children: [
+              Task(
+                  'Aprender Flutter',
+                  'https://pbs.twimg.com/media/Eu7m692XIAEvxxP?format=png&name=large',
+                  2),
+              Task(
+                  'Meditação',
+                  'https://manhattanmentalhealthcounseling.com/wp-content/uploads/2019/06/Top-5-Scientific-Findings-on-MeditationMindfulness-881x710.jpeg',
+                  1),
+              Task('Jogar',
+                  'https://i.ibb.co/tB29PZB/kako-epifania-2022-2-c-pia.jpg', 2),
+              Task(
+                  'Ler',
+                  'https://thebogotapost.com/wp-content/uploads/2017/06/636052464065850579-137719760_flyer-image-1.jpg',
+                  3),
+              Task(
+                  'Corrida',
+                  'https://www.corridaperfeita.com/wp-content/uploads/2023/03/blogpost-2.jpg',
+                  4),
+            ],
+          ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {}),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () { // propriedade do botão ao ser pressionado
+            setState(() { //propriedade que verifica um determinado comportamento em mudanças.
+              opacity = !opacity;
+            });
+        },
+          child: Icon(Icons.remove_red_eye),
+        ),
       ),
     );
   }
@@ -48,14 +78,15 @@ class Task extends StatefulWidget {
   final String image;
   final int hardship; // variável da dificuldade
 
-  const Task(this.name, this.image, {super.key}); //construtor
+  const Task(this.name, this.image, this.hardship, {super.key}); //construtor
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0; // deve ficar antes do override para que o contador funcione na tela
+  int nivel =
+      0; // deve ficar antes do override para que o contador funcione na tela
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +96,20 @@ class _TaskState extends State<Task> {
         child: Stack(
           children: [
             Container(
-              color: Colors.blue,
               height: 140,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Colors.blue, // propriedade color foi retirada do lado de fora e incluído aqui dentro, para não haver conflito
+              ),
             ),
             Column(
               children: [
                 Container(
-                  color: Colors.white,
                   height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -80,9 +117,14 @@ class _TaskState extends State<Task> {
                         color: Colors.black26,
                         height: 100,
                         width: 72,
-                        child: Image.network( // network indica imagens da web
-                          widget.image, //chamando a variável da imagem
-                          fit: BoxFit.cover, //indica que deve cobrir a área em que está contida
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            // network indica imagens da web
+                            widget.image, //chamando a variável da imagem
+                            fit: BoxFit
+                                .cover, //indica que deve cobrir a área em que está contida
+                          ),
                         ),
                       ),
                       Column(
@@ -99,13 +141,33 @@ class _TaskState extends State<Task> {
                               ),
                             ),
                           ),
-                          Row( // utilizado para permitir que as estrelas fiquem em linha
+                          Row(// utilizado para permitir que as estrelas fiquem em linha
                             children: [
-                              Icon(Icons.star, size: 15, color: Colors.blue),
-                              Icon(Icons.star, size: 15, color: Colors.blue),
-                              Icon(Icons.star, size: 15, color: Colors.blue),
-                              Icon(Icons.star, size: 15, color: Colors.blue[100]),
-                              Icon(Icons.star, size: 15, color: Colors.blue[100]),
+                              Icon(
+                                Icons.star,
+                                size: 15,
+                                color: (widget.hardship >= 1) ? Colors.blue : Colors.blue[100], //if ternário (condição) ? resultado1 : resultado2
+                              ),
+                              Icon(
+                                Icons.star,
+                                size: 15,
+                                color: (widget.hardship >= 2) ? Colors.blue : Colors.blue[100],
+                              ),
+                              Icon(
+                                Icons.star,
+                                size: 15,
+                                color: (widget.hardship >= 3) ? Colors.blue : Colors.blue[100],
+                              ),
+                              Icon(
+                                Icons.star,
+                                size: 15,
+                                color: (widget.hardship >= 4) ? Colors.blue : Colors.blue[100],
+                              ),
+                              Icon(
+                                Icons.star,
+                                size: 15,
+                                color: (widget.hardship >= 5) ? Colors.blue : Colors.blue[100],
+                              ),
                             ],
                           ),
                         ],
@@ -152,9 +214,10 @@ class _TaskState extends State<Task> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        child: LinearProgressIndicator( //barra de progresso
+                        child: LinearProgressIndicator(
+                          //barra de progresso
                           color: Colors.white,
-                          value: nivel / 10,
+                          value: (widget.hardship > 0) ? (nivel / widget.hardship) / 10 : 1, // para que a barra de progressão seja relacionada à dificuldade e verificando se a dificuldade não é zero
                         ),
                         width: 200,
                       ),
