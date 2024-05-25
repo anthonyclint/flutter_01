@@ -1,6 +1,7 @@
+import 'package:first_app/data/task_inherited.dart';
+import 'package:first_app/screens/form_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../components/task.dart';
 
 class InitialScreen extends StatefulWidget {
   const InitialScreen({super.key});
@@ -10,8 +11,6 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  bool opacity = true;// variável que poderá ser alterada ao longo da execução
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,41 +24,24 @@ class _InitialScreenState extends State<InitialScreen> {
         ),
         backgroundColor: Colors.blue,
       ),
-      body: AnimatedOpacity(
-        opacity: opacity ? 1 : 0,
-        duration: const Duration(milliseconds: 800),
-        child: ListView(
-          children: const [
-            Task(
-                'Aprender Flutter',
-                'assets/images/bird.png',
-                2),
-            Task(
-                'Meditação',
-                'assets/images/meditation.jpeg',
-                1),
-            Task('Jogar',
-                'assets/images/game.jpg', 2),
-            Task(
-                'Ler',
-                'assets/images/book.jpg',
-                3),
-            Task(
-                'Corrida',
-                'assets/images/running.jpg',
-                4
-            ),
-            SizedBox(height: 100,),
-          ],
-        ),
+      body: ListView(
+        padding: const EdgeInsets.only(top: 8, bottom: 70),
+        children: TaskInherited.of(context).taskList,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { // propriedade do botão ao ser pressionado
-          setState(() { //propriedade que verifica um determinado comportamento em mudanças.
-            opacity = !opacity;
+        onPressed: () {// propriedade do botão ao ser pressionado
+          setState(() {//propriedade que verifica um determinado comportamento em mudanças.
+            Navigator.push(
+                context, //context da tela inicial
+                MaterialPageRoute(
+                    builder: (contextNew) => FormScreen(
+                          taskContext: context, //enviando o context da tela inicial para o task Inherited
+                        ),
+                ),
+            );
           });
         },
-        child: const Icon(Icons.remove_red_eye),
+        child: const Icon(Icons.add),
       ),
     );
   }

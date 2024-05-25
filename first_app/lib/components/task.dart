@@ -6,14 +6,23 @@ class Task extends StatefulWidget {//statefulWidget é capaz de "mudar" - está 
   final String image;
   final int hardship; // variável da dificuldade
 
-  const Task(this.name, this.image, this.hardship, {super.key}); //construtor
+  Task(this.name, this.image, this.hardship, {super.key}); //construtor
+
+  int nivel = 0; // deve ficar aqui para que ao adicionar novas tarefas as já existentes não resetem
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  int nivel = 0; // deve ficar antes do override para que o contador funcione na tela
+
+  // método para verificar se o endereço da imagem é de internet ou de pasta
+  bool assetOrNetwork(){
+    if(widget.image.contains('http')){
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +54,8 @@ class _TaskState extends State<Task> {
                       width: 72,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: Image.asset(
-                          // network indica imagens da web
-                          widget.image, //chamando a variável da imagem
-                          fit: BoxFit
-                              .cover, //indica que deve cobrir a área em que está contida
-                        ),
+                        child: assetOrNetwork() ? Image.asset(widget.image, fit: BoxFit.cover,)
+                            : Image.network(widget.image, fit: BoxFit.cover),
                       ),
                     ),
                     Column(
@@ -75,11 +80,15 @@ class _TaskState extends State<Task> {
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            nivel++;
+                            widget.nivel++;
                           });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            //alterando o formato do botão
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                         ),
                         child: const Center(
                           child: Column(
@@ -115,14 +124,14 @@ class _TaskState extends State<Task> {
                       child: LinearProgressIndicator(
                         //barra de progresso
                         color: Colors.white,
-                        value: (widget.hardship > 0) ? (nivel / widget.hardship) / 10 : 1, // para que a barra de progressão seja relacionada à dificuldade e verificando se a dificuldade não é zero
+                        value: (widget.hardship > 0) ? (widget.nivel / widget.hardship) / 10 : 1, // para que a barra de progressão seja relacionada à dificuldade e verificando se a dificuldade não é zero
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Text(
-                      'Nível: $nivel',
+                      'Nível: ${widget.nivel}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
