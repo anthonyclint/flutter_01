@@ -1,3 +1,5 @@
+import 'package:first_app/components/task.dart';
+import 'package:first_app/data/task_dao.dart';
 import 'package:first_app/data/task_inherited.dart';
 import 'package:flutter/material.dart';
 
@@ -150,12 +152,11 @@ class _FormScreenState extends State<FormScreen> {
                     onPressed: () {
                       if(_formKey.currentState!.validate()){
 
-                        //enviando os campos do formulário para o método que cria tasks
-                        TaskInherited.of(widget.taskContext).newTask( //widget.taskContext é o contexto da tela inicial que foi enviado para o taskInherited
+                        TaskDao().save(Task(
                             nameController.text,
                             imageController.text,
                             int.parse(difficultyController.text)
-                        );
+                        ));
 
                         //método para apresentar um snackbar quando todos os campos foram preenchidos e o botão for acionado
                         ScaffoldMessenger.of(context).showSnackBar(

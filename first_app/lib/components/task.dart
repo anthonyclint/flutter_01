@@ -1,4 +1,5 @@
 import 'package:first_app/components/difficulty.dart';
+import 'package:first_app/data/task_dao.dart';
 import 'package:flutter/material.dart';
 
 class Task extends StatefulWidget {//statefulWidget é capaz de "mudar" - está sendo usado para que o contador funcione
@@ -78,6 +79,9 @@ class _TaskState extends State<Task> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
+                        onLongPress: (){
+                          TaskDao().delete(widget.name);
+                        },
                         onPressed: () {
                           setState(() {
                             widget.nivel++;
