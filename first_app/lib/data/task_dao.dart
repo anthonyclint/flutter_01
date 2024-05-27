@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:first_app/data/database.dart';
 import 'package:first_app/components/task.dart';
 import 'package:sqflite/sqlite_api.dart';

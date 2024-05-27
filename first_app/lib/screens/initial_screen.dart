@@ -1,6 +1,6 @@
 import 'package:first_app/components/task.dart';
 import 'package:first_app/data/task_dao.dart';
-import 'package:first_app/data/task_inherited.dart';
+//import 'package:first_app/data/task_inherited.dart';
 import 'package:first_app/screens/form_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class _InitialScreenState extends State<InitialScreen> {
         actions: [
           IconButton( //botão de refresh da tela
               onPressed: (){setState(() {});},
-              icon: Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
           )
         ],
         title: const Text(
@@ -33,7 +33,7 @@ class _InitialScreenState extends State<InitialScreen> {
         backgroundColor: Colors.blue,
       ),
       body: Padding(
-          padding: EdgeInsets.only(top: 8, bottom: 70),
+          padding: const EdgeInsets.only(top: 8, bottom: 70),
           child: FutureBuilder<List<Task>>(
               future: TaskDao().findAll(),
               builder: (context,snapshot){ //snapshot responsável pelos dados
@@ -49,7 +49,6 @@ class _InitialScreenState extends State<InitialScreen> {
                         ],
                       ),
                     );
-                    break;
 
                   case ConnectionState.waiting:
                     return const Center(
@@ -60,7 +59,6 @@ class _InitialScreenState extends State<InitialScreen> {
                         ],
                       ),
                     );
-                    break;
 
                   case ConnectionState.active:
                     return const Center(
@@ -71,7 +69,6 @@ class _InitialScreenState extends State<InitialScreen> {
                         ],
                       ),
                     );
-                    break;
 
                   case ConnectionState.done:
                     if(snapshot.hasData && items != null){ //se existe dados e se são diferentes de nulo
@@ -98,10 +95,8 @@ class _InitialScreenState extends State<InitialScreen> {
                         ),
                       );
                     }
-                    return Text('Erro ao carregar tarefas!');
-                    break;
+                    return const Text('Erro ao carregar tarefas!');
                 }
-                return Text('Erro desconhecido!');
           }),
       ),
       floatingActionButton: FloatingActionButton(
